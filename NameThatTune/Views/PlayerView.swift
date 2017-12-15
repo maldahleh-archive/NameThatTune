@@ -43,6 +43,8 @@ class PlayerView: UIView, UIPickerViewDataSource, UIPickerViewDelegate {
         select.setTitle("Select Song", for: .normal)
         select.setTitleColor(.white, for: .normal)
         select.showsTouchWhenHighlighted = true
+        
+        select.addTarget(self, action: #selector(selectTapped), for: .touchUpInside)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -59,5 +61,10 @@ class PlayerView: UIView, UIPickerViewDataSource, UIPickerViewDelegate {
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return sortedSongs[row].attributes.name
+    }
+    
+    @objc func selectTapped() {
+        let selection = sortedSongs[picker.selectedRow(inComponent: 0)]
+        controller?.selectTapped(player: select.backgroundColor!, answer: selection.attributes.name)
     }
 }

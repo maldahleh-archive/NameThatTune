@@ -7,8 +7,11 @@
 //
 
 import UIKit
+import MediaPlayer
 
 class PlayViewController: UIViewController {
+    let musicPlayerController: MPMusicPlayerController = .systemMusicPlayer
+    
     var songs = [Song]()
     var currentSong = ""
     
@@ -39,12 +42,15 @@ class PlayViewController: UIViewController {
 
         configurePlayerViews()
         configureScoreLabels()
+        
+        playSong()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
+    // MARK: Configuring views
     func configurePlayerViews() {
         player1 = PlayerView(color: .red, songs: songs, delegate: self)
         player2 = PlayerView(color: .blue, songs: songs, delegate: self)
@@ -87,5 +93,34 @@ class PlayViewController: UIViewController {
         
         score1 = 0
         score2 = 0
+    }
+    
+    // MARK: Playing songs
+    func selectTapped(player: UIColor, answer: String) {
+        if answer == currentSong {
+            if player == .red {
+                score1 += 1
+            } else {
+                score2 += 1
+            }
+            
+            playSong()
+        }
+    }
+    
+    func playSong() {
+        if let song = songs.popLast() {
+            currentSong = song.attributes.name
+            
+            let descriptor = MPMusicPlayerStoreQueueDescriptor(storeIDs: [song.id])
+            musicPlayerController.setQueue(with: descriptor)
+            musicPlayerController.play()
+        } else {
+            musicPlayerController.stop()
+            
+            let ac = UIAlertController(title: "Game over!", message: "Player 1: \(score1)\nPlayer 2: \(score2)", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            present(ac, animated: true)
+        }
     }
 }

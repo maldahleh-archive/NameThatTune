@@ -105,7 +105,10 @@ extension ViewController {
                     
                     if let songs = musicResult.results.songs.first?.data {
                         let shuffledSongs = (songs as NSArray).shuffled() as! [Song]
+                        let gameController = PlayViewController()
+                        gameController.songs = shuffledSongs
                         
+                        self.present(gameController, animated: true)
                         return
                     }
                 } catch {

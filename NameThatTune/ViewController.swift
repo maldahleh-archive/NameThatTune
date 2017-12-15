@@ -11,7 +11,8 @@ import GameplayKit
 import StoreKit
 
 class ViewController: UIViewController {
-    
+    let developerToken = ""
+    let urlSession: URLSession = URLSession(configuration: .default)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,7 +92,31 @@ extension ViewController {
     }
     
     func fetchMusicWith(countryCode code: String) {
+        var urlRequest = URLRequest(url: URL(string: "https://api.music.apple.com/v1/catalog/\(code)/charts?types=songs")!)
+        urlRequest.addValue("Bearer \(developerToken)", forHTTPHeaderField: "Authorization")
         
+        let task = urlSession.dataTask(with: urlRequest) { (data, response, error) in
+            guard let data = data else { return }
+            
+            DispatchQueue.main.async {
+                do {
+                    let decoder = JSONDecoder()
+                    let musicResult = try decoder.decode(MusicResult.self, from: data)
+                    
+                    if let songs = musicResult.results.songs.first?.data {
+                        let shuffledSongs = (songs as NSArray).shuffled() as! [Song]
+                        
+                        return
+                    }
+                } catch {
+                    print(error.localizedDescription)
+                }
+                
+                self.showNoGameMessage("Unable to fetch data from Apple Music")
+            }
+        }
+        
+        task.resume()
     }
     
     func showNoGameMessage(_ message: String) {

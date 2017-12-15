@@ -52,6 +52,45 @@ extension ViewController {
     }
     
     func requestCapabailities() {
+        let controller = SKCloudServiceController()
+        controller.requestCapabilities { capabilities, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    print(error.localizedDescription)
+                    return
+                }
+                
+                if capabilities.contains(.musicCatalogPlayback) {
+                    controller.requestStorefrontCountryCode { country, error in
+                        if let countryCode = country {
+                            self.fetchMusicWith(countryCode: countryCode)
+                        } else {
+                            self.showNoGameMessage("Unable to determine country code.")
+                        }
+                    }
+                } else if capabilities.contains(.musicCatalogSubscriptionEligible) {
+                    let subscribeController = SKCloudServiceSetupViewController()
+                    
+                    let options: [SKCloudServiceSetupOptionsKey: Any] = [
+                        .action: SKCloudServiceSetupAction.subscribe,
+                        .messageIdentifier: SKCloudServiceSetupMessageIdentifier.playMusic
+                    ]
+                    
+                    subscribeController.load(options: options) { success, error in
+                        if success {
+                            self.present(subscribeController, animated: true)
+                        } else {
+                            self.showNoGameMessage(error?.localizedDescription ?? "Unknown error")
+                        }
+                    }
+                } else {
+                    self.showNoGameMessage("You aren't eligible to subscribe to Apple Music.")
+                }
+            }
+        }
+    }
+    
+    func fetchMusicWith(countryCode code: String) {
         
     }
     

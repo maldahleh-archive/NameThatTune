@@ -17,7 +17,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        addStartButton(to: self.view)
+        addStartButton(to: view)
     }
 
     override func didReceiveMemoryWarning() {
@@ -27,7 +27,7 @@ class ViewController: UIViewController {
 
 extension ViewController {
     func addStartButton(to view: UIView) {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         view.addSubview(button)
         
         button.translatesAutoresizingMaskIntoConstraints = false

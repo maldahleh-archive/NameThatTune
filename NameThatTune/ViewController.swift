@@ -27,13 +27,15 @@ class ViewController: UIViewController {
 extension ViewController {
     func addStartButton(to view: UIView) {
         let button = UIButton()
-        button.setTitle("Play!", for: .normal)
         view.addSubview(button)
         
         button.translatesAutoresizingMaskIntoConstraints = false
         button.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         button.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         button.heightAnchor.constraint(equalToConstant: 80.0).isActive = true
+        
+        button.setTitle("Play!", for: .normal)
+        button.addTarget(self, action: #selector(startGame), for: .touchUpInside)
     }
     
     @objc func startGame() {
@@ -54,6 +56,10 @@ extension ViewController {
     }
     
     func showNoGameMessage(_ message: String) {
+        let alertController = UIAlertController(title: "Can't Play!", message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: "OK", style: .default, handler: nil)
         
+        alertController.addAction(action)
+        present(alertController, animated: true)
     }
 }

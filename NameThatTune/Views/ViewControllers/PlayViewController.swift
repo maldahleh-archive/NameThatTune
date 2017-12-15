@@ -46,8 +46,8 @@ class PlayViewController: UIViewController {
     }
     
     func configurePlayerViews() {
-        player1 = PlayerView()
-        player2 = PlayerView()
+        player1 = PlayerView(color: .red, songs: songs, delegate: self)
+        player2 = PlayerView(color: .blue, songs: songs, delegate: self)
         
         for case let playerView? in [player1, player2] {
             playerView.translatesAutoresizingMaskIntoConstraints = false

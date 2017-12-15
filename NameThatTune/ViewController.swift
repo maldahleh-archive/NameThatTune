@@ -37,7 +37,16 @@ extension ViewController {
     }
     
     @objc func startGame() {
-        
+        switch SKCloudServiceController.authorizationStatus() {
+        case .authorized: requestCapabailities()
+        case .notDetermined:
+            SKCloudServiceController.requestAuthorization { [weak self] authorizationStatus in
+                DispatchQueue.main.async {
+                    self?.startGame()
+                }
+            }
+        default: showNoGameMessage("We don't have permission to use your Apple Music library.")
+        }
     }
     
     func requestCapabailities() {

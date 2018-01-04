@@ -4,6 +4,8 @@ NameThatTune is a two-player iOS 11 game where players compete to name the top 2
 
 This app cannot be run without a key and requires Apple Music on the target device.
 
+Project created as part of Paul Hudson's iOS 11 book.
+
 ## Screenshots
 
 Coming Soon
